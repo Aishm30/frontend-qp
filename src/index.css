@@ -1,0 +1,74 @@
+/* === Reset & Base === */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: #f0f2f5;
+  color: #213547;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* === Root Theme Variables === */
+:root {
+  font-weight: 400;
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+/* === Body Layout === */
+body {
+  display: block;
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+/* === Typography === */
+h1 {
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+/* === Links === */
+a {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #125bb5;
+}
+
+/* === Buttons === */
+button {
+  border-radius: 8px;
+  border: none;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  background-color: #1976d2;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #125bb5;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 3px solid rgba(100, 108, 255, 0.5);
+}
+
+/* === Form Controls === */
+input, select, textarea {
+  font-family: inherit;
+  font-size: 1rem;
+}
