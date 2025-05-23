@@ -38,7 +38,7 @@ const AddQp = () => {
     formData.append('file', file);
 
     try {
-      await axios.post('http://localhost:5000/api/question-papers', formData);
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/question-papers`, formData);
       alert('Question paper added successfully!');
       setSubject('');
       setYear('');
