@@ -26,10 +26,9 @@ const ManageQP = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/question-papers');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/question-papers`);
       const grouped = {};
 
-      // Group by subject
       res.data.forEach((qp) => {
         if (!grouped[qp.subject]) {
           grouped[qp.subject] = [];
@@ -37,7 +36,6 @@ const ManageQP = () => {
         grouped[qp.subject].push(qp);
       });
 
-      // Sort each group by year, then semester
       Object.keys(grouped).forEach((subject) => {
         grouped[subject].sort((a, b) => {
           const yearDiff = a.year - b.year;
@@ -57,7 +55,7 @@ const ManageQP = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/question-papers/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/question-papers/${id}`);
       fetchData();
     } catch (err) {
       console.error('Error deleting:', err);
