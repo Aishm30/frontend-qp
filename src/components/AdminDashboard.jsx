@@ -1,15 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Typography, Button, Card, CardContent, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
 
+  // Redirect to login if token is not found
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/');
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // clear token
+    navigate('/');
+  };
+
   return (
     <Box sx={{ p: 4 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
-        <Typography variant="h4">Admin Dashboard</Typography>
-        <Button variant="contained" color="error" onClick={() => navigate('/')}>
+        <Typography variant="h4" fontWeight="bold">Admin Dashboard</Typography>
+        <Button variant="contained" color="error" onClick={handleLogout}>
           Logout
         </Button>
       </Box>

@@ -14,12 +14,13 @@ const AdminLogin = () => {
     setErrorMsg('');
 
     try {
-      const res = await axios.post('http://localhost:5000/api/admin/login', {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/login`, {
         email,
         password,
       });
 
       if (res.status === 200) {
+        localStorage.setItem('token', res.data.token); // Save token
         navigate('/dashboard');
       }
     } catch (error) {
@@ -28,59 +29,20 @@ const AdminLogin = () => {
   };
 
   return (
-    <Box
-      sx={{
-        height: '100vh',
-        width: '100vw',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#f0f2f5',
-      }}
-    >
-      <Paper
-        elevation={6}
-        sx={{
-          padding: 4,
-          width: 400,
-          borderRadius: 2,
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
-        }}
-      >
+    <Box sx={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#f0f2f5' }}>
+      <Paper elevation={6} sx={{ padding: 4, width: 400 }}>
         <Typography component="h1" variant="h5" align="center" gutterBottom>
           Admin Login
         </Typography>
 
         {errorMsg && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {errorMsg}
-          </Alert>
+          <Alert severity="error" sx={{ mb: 2 }}>{errorMsg}</Alert>
         )}
 
         <Box component="form" onSubmit={handleSubmit} noValidate>
-          <TextField
-            label="Email Address"
-            fullWidth
-            margin="normal"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <TextField
-            label="Password"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3 }}
-          >
-            Login
-          </Button>
+          <TextField label="Email Address" fullWidth margin="normal" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <TextField label="Password" type="password" fullWidth margin="normal" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3 }}>Login</Button>
         </Box>
       </Paper>
     </Box>
