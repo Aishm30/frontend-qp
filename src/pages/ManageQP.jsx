@@ -22,13 +22,20 @@ import HomeIcon from '@mui/icons-material/Home';
 
 const ManageQP = () => {
   const [groupedQPs, setGroupedQPs] = useState({});
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // Fetch all question papers grouped by subject
   const fetchData = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/question-papers`);
-      const grouped = {};
+      setError('');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/question-papers`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('admintoken')}`
+        }
+      });
 
+      const grouped = {};
       res.data.forEach((qp) => {
         if (!grouped[qp.subject]) {
           grouped[qp.subject] = [];
@@ -36,6 +43,7 @@ const ManageQP = () => {
         grouped[qp.subject].push(qp);
       });
 
+      // Sort each subject's QPs by year and semester
       Object.keys(grouped).forEach((subject) => {
         grouped[subject].sort((a, b) => {
           const yearDiff = a.year - b.year;
@@ -45,7 +53,8 @@ const ManageQP = () => {
 
       setGroupedQPs(grouped);
     } catch (err) {
-      console.error(err);
+      console.error('Error fetching question papers:', err);
+      setError('Failed to load question papers.');
     }
   };
 
@@ -53,12 +62,20 @@ const ManageQP = () => {
     fetchData();
   }, []);
 
+  // Delete question paper and refresh list
   const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this question paper?')) return;
+
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/question-papers/${id}`);
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/admin/question-papers/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('admintoken')}`
+        }
+      });
       fetchData();
     } catch (err) {
-      console.error('Error deleting:', err);
+      console.error('Error deleting question paper:', err);
+      alert('Failed to delete question paper');
     }
   };
 
@@ -71,7 +88,7 @@ const ManageQP = () => {
             Manage Question Papers
           </Typography>
           <Tooltip title="Go to Home">
-            <IconButton onClick={() => navigate('/dashboard')} color="primary">
+            <IconButton onClick={() => navigate('/admin-dashboard')} color="primary">
               <HomeIcon fontSize="medium" />
             </IconButton>
           </Tooltip>
@@ -80,6 +97,8 @@ const ManageQP = () => {
 
       {/* Page Content */}
       <Container maxWidth="xl" sx={{ py: 5 }}>
+        {error && <Typography color="error" sx={{ mb: 2 }}>{error}</Typography>}
+
         {Object.keys(groupedQPs).length === 0 ? (
           <Typography>No question papers found.</Typography>
         ) : (
@@ -102,7 +121,7 @@ const ManageQP = () => {
                             href={qp.fileUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{ color: '#1976d2' }}
+                            style={{ color: '#1976d2', textDecoration: 'none' }}
                           >
                             View File <OpenInNewIcon fontSize="small" />
                           </a>

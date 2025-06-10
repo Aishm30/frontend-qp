@@ -1,63 +1,74 @@
-import React, { useEffect } from 'react';
-import { Box, Typography, Button, Card, CardContent, Grid } from '@mui/material';
+import React from 'react';
+import { Box, Typography, Grid, Card, CardContent, CardActionArea, IconButton, AppBar, Toolbar } from '@mui/material';
+import NoteIcon from '@mui/icons-material/Note'; // icon for comments
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import LogoutIcon from '@mui/icons-material/Logout'; // Logout icon
 import { useNavigate } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
 
-  // Redirect to login if token is not found
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/');
-    }
-  }, [navigate]);
-
   const handleLogout = () => {
-    localStorage.removeItem('token'); // clear token
-    navigate('/');
+    localStorage.removeItem('token'); // Clear token on logout
+    navigate('/'); // Redirect to login page
   };
 
   return (
-    <Box sx={{ p: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
-        <Typography variant="h4" fontWeight="bold">Admin Dashboard</Typography>
-        <Button variant="contained" color="error" onClick={handleLogout}>
-          Logout
-        </Button>
+    <Box>
+      {/* AppBar with Logout button */}
+      <AppBar position="static" color="default" elevation={1}>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant="h6">Admin Dashboard</Typography>
+          <IconButton color="error" onClick={handleLogout} title="Logout">
+            <LogoutIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+
+      {/* Dashboard cards */}
+      <Box sx={{ p: 4 }}>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={4}>
+            <Card>
+              <CardActionArea onClick={() => navigate('/add-qp')}>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <AddCircleOutlineIcon color="primary" sx={{ fontSize: 60 }} />
+                  <Typography variant="h6" mt={2}>
+                    Add Question Paper
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <Card>
+              <CardActionArea onClick={() => navigate('/manage-qp')}>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <ManageAccountsIcon color="primary" sx={{ fontSize: 60 }} />
+                  <Typography variant="h6" mt={2}>
+                    Manage Question Papers
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <Card>
+              <CardActionArea onClick={() => navigate('/comments')}>
+                <CardContent sx={{ textAlign: 'center' }}>
+                  <NoteIcon color="primary" sx={{ fontSize: 60 }} />
+                  <Typography variant="h6" mt={2}>
+                    User Comments
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+        </Grid>
       </Box>
-
-      <Grid container spacing={4} justifyContent="center">
-        <Grid item xs={12} sm={6} md={4}>
-          <Card sx={{ textAlign: 'center', p: 2 }}>
-            <CardContent>
-              <Typography variant="h6">Create New QP</Typography>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => navigate('/add-qp')}
-              >
-                Add New
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
-          <Card sx={{ textAlign: 'center', p: 2 }}>
-            <CardContent>
-              <Typography variant="h6">Manage Question Papers</Typography>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => navigate('/manage-qp')}
-              >
-                View All
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
     </Box>
   );
 };

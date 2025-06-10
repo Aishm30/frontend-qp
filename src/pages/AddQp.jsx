@@ -38,17 +38,21 @@ const AddQp = () => {
     formData.append('file', file);
 
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/question-papers`, formData, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/question-papers`, formData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('admintoken')}`,
           'Content-Type': 'multipart/form-data',
         }
       });
       alert('Question paper added successfully!');
+      // Clear form fields
       setSubject('');
       setYear('');
       setSemester('');
       setFile(null);
+
+      // Navigate to Manage QP page to see the updated list
+      navigate('/manage-qp');
     } catch (err) {
       console.error('Error uploading QP:', err);
       setError('Failed to add question paper.');
@@ -59,7 +63,7 @@ const AddQp = () => {
     <Box sx={{ minHeight: '100vh', backgroundColor: '#f0f2f5' }}>
       <AppBar position="static" color="default" elevation={0}>
         <Toolbar sx={{ justifyContent: 'flex-end' }}>
-          <IconButton onClick={() => navigate('/dashboard')} color="primary">
+          <IconButton onClick={() => navigate('/admin-dashboard')} color="primary">
             <HomeIcon />
           </IconButton>
         </Toolbar>
@@ -72,9 +76,30 @@ const AddQp = () => {
           {error && <Typography color="error" variant="body2" sx={{ mb: 2 }}>{error}</Typography>}
 
           <form onSubmit={handleSubmit}>
-            <TextField label="Subject" fullWidth margin="normal" value={subject} onChange={(e) => setSubject(e.target.value)} />
-            <TextField label="Year" fullWidth margin="normal" value={year} onChange={(e) => setYear(e.target.value)} type="number" inputProps={{ min: 2000, max: 2099 }} />
-            <TextField label="Semester" select fullWidth margin="normal" value={semester} onChange={(e) => setSemester(e.target.value)}>
+            <TextField
+              label="Subject"
+              fullWidth
+              margin="normal"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+            />
+            <TextField
+              label="Year"
+              fullWidth
+              margin="normal"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              type="number"
+              inputProps={{ min: 2000, max: 2099 }}
+            />
+            <TextField
+              label="Semester"
+              select
+              fullWidth
+              margin="normal"
+              value={semester}
+              onChange={(e) => setSemester(e.target.value)}
+            >
               {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
                 <MenuItem key={sem} value={sem}>Semester {sem}</MenuItem>
               ))}
@@ -82,7 +107,12 @@ const AddQp = () => {
 
             <Button variant="outlined" component="label" fullWidth sx={{ my: 2 }}>
               Upload File
-              <input type="file" hidden accept=".pdf,.jpg,.jpeg,.png" onChange={(e) => setFile(e.target.files[0])} />
+              <input
+                type="file"
+                hidden
+                accept=".pdf,.jpg,.jpeg,.png"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
             </Button>
 
             <Button type="submit" variant="contained" fullWidth>Add</Button>
